@@ -30,6 +30,19 @@ void goToHomePosition()
 		_oDxlHandler.sendTargetJointPosition(l_vTargetJointPosition);
 }
 
+void currentPos()
+{
+	// read current joint position
+	std::vector<uint16_t> l_vCurrentJointPosition;
+	_oDxlHandler.readCurrentJointPosition(l_vCurrentJointPosition);
+	
+	// display current joint position
+	std::cout << "vCurrentJointPosition= (" << std::endl;
+	for (int l_joint=0; l_joint < l_vCurrentJointPosition.size(); l_joint++)
+		std::cout << l_vCurrentJointPosition[l_joint] << ", ";
+	std::cout << ")" << std::endl;
+}
+
 int main()
 { 
 	std::cout << "===Initialization of the Dynamixel Motor communication====" << std::endl;
@@ -40,17 +53,11 @@ int main()
 	_oDxlHandler.enableTorque(true);
 	std::cout << std::endl;
 	
+	currentPos();
+	
 	goToHomePosition();
 	
-	// read current joint position
-	std::vector<uint16_t> l_vCurrentJointPosition;
-	_oDxlHandler.readCurrentJointPosition(l_vCurrentJointPosition);
-	
-	// display current joint position
-	std::cout << "vCurrentJointPosition= (" << std::endl;
-	for (int l_joint=0; l_joint < l_vCurrentJointPosition.size(); l_joint++)
-		std::cout << l_vCurrentJointPosition[l_joint] << ", ";
-	std::cout << ")" << std::endl;
+	currentPos();
 	
 	// wait 1s
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
