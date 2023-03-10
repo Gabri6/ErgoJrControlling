@@ -37,11 +37,25 @@ void currentPos()
 	_oDxlHandler.readCurrentJointPosition(l_vCurrentJointPosition);
 	
 	// display current joint position
-	std::cout << "vCurrentJointPosition= (" << std::endl;
+	std::cout << "vCurrentJointPosition= (";
 	for (int l_joint=0; l_joint < l_vCurrentJointPosition.size(); l_joint++)
 		std::cout << l_vCurrentJointPosition[l_joint] << ", ";
 	std::cout << ")" << std::endl;
 }
+
+float gripperControl()
+{
+	//read current joint 6 torque
+	std::vector<uint16_t> l_vCurrentJointTorque;
+	_oDxlHandler.readCurrentJointTorque(l_vCurrentJointTorque);
+	
+	// display current joint 6 torque
+	std::cout << "vCurrentJoint6Torque= ";
+	std::cout << l_vCurrentJointTorque[5] << std::endl;
+	float joint6Torque = l_vCurrentJointTorque[5];
+	return (float)joint6Torque;
+}
+
 
 int main()
 { 
@@ -58,6 +72,8 @@ int main()
 	goToHomePosition();
 	
 	currentPos();
+	
+	gripperControl();
 	
 	// wait 1s
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
