@@ -14,6 +14,22 @@ float _maxJointCmd = 1023;
 float _minJointAngle = -180.0f;
 float _maxJointAngle = 180.0f;
 
+int convertAnglesToJointCmd(float fJointAngle)
+{ // y = ax + b
+	float a = (_maxJointCmd-_minJointCmd) / (_maxJointAngle - _minJointAngle);
+	float b = _minJointCmd - a * _minJointAngle;
+	float jointCmd = a * fJointAngle + b;
+	return (int)jointCmd;
+}
+
+void goToHomePosition()
+{
+	std::vector<uint16_t> l_vTargetJointPosition;
+	for (int l_joint = 0; l_joint < _nbJoints; l_joint++)
+		l_vTargetJointPosition.push_back(convertAnglesToJointCmd(0.0f));
+		_oDxlHandler.sendTargetJointPosition(l_vTargetJointPosition);
+}
+
 int main()
 { 
 	std::cout << "===Initialization of the Dynamixel Motor communication====" << std::endl;
@@ -23,6 +39,8 @@ int main()
 	_oDxlHandler.setBaudRate(_poppyDxlBaudRate);
 	_oDxlHandler.enableTorque(true);
 	std::cout << std::endl;
+	
+	goToHomePosition();
 	
 	// read current joint position
 	std::vector<uint16_t> l_vCurrentJointPosition;
